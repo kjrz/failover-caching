@@ -32,7 +32,8 @@ public class ClientConfig {
         // return getCachingFactory(true); // (1)
         // return getFailoverFactory(false); // (2)
         // return getFailoverFactory(true); // (3)
-        return getFailoverCachingFactory(true); // (4)
+//        return getFailoverCachingFactory(true); // (4)
+        return getCachingFailoverFactory(true); // (5)
     }
 
     @SuppressWarnings("unused")
@@ -52,6 +53,13 @@ public class ClientConfig {
         final TcpNetClientConnectionFactory tcpFactory = getTcpFactory(singleUse);
         final CachingClientConnectionFactory cachingFactory = getCachingFactory(tcpFactory);
         return getFailoverFactory(cachingFactory, singleUse);
+    }
+
+    @SuppressWarnings("unused")
+    private AbstractClientConnectionFactory getCachingFailoverFactory(final boolean singleUse) {
+        final TcpNetClientConnectionFactory tcpFactory = getTcpFactory(singleUse);
+        FailoverClientConnectionFactory failoverFactory = getFailoverFactory(tcpFactory, singleUse);
+        return getCachingFactory(tcpFactory);
     }
 
     private TcpNetClientConnectionFactory getTcpFactory(final boolean singleUse) {
